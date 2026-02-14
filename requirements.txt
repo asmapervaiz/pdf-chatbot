@@ -1,0 +1,27 @@
+# Web framework
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+python-multipart==0.0.17
+
+# Streamlit UI
+streamlit>=1.40.0
+httpx>=0.27.0
+
+# Config
+pydantic-settings
+pydantic
+
+# PDF processing
+PyMuPDF
+
+# Embeddings & vector store
+sentence-transformers
+chromadb
+
+# NLP / LLM (local fallback)
+transformers
+torch
+accelerate
+
+# Optional: OpenAI for better answers (set OPENAI_API_KEY)
+openai
