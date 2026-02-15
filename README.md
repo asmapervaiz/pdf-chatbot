@@ -8,7 +8,7 @@ A Python-based chatbot that answers user questions using content extracted from 
 
 - **Document upload API** — Upload PDFs; text is extracted, chunked, and indexed.
 - **Chatbot API** — Ask questions and get answers grounded in your documents (RAG).
-- **Streamlit UI** — Upload PDFs, chat, and clear index from a Python UI (no JavaScript).
+- **Streamlit UI** — Upload PDFs, chat, and clear index from a Python UI.
 - **Docker** — Single container run with all dependencies.
 
 ---
@@ -41,11 +41,11 @@ A Python-based chatbot that answers user questions using content extracted from 
    copy .env.example .env   # Windows
    # cp .env.example .env   # Linux/macOS
    ```
-   Set `OPENAI_API_KEY` in `.env` to use **OpenAI text-embedding-3-small** for embeddings and **gpt-3.5-turbo** for answers. If unset, the app uses local sentence-transformers (all-MiniLM-L6-v2) and HuggingFace FLAN-T5. If you switch between OpenAI and local embeddings, call **POST /documents/clear** then re-upload your PDFs.
+   Set `OPENAI_API_KEY` in `.env` to use **OpenAI text-embedding-3-small** for embeddings and **gpt-3.5-turbo** for answers. 
 
 4. **Run backend + Streamlit UI together** (single command)
    ```bash
-   python run.py
+   python -m app.main
    ```
    This starts the API at [http://localhost:8000](http://localhost:8000) and the Streamlit UI at [http://localhost:8501](http://localhost:8501). Open **http://localhost:8501** to upload PDFs and chat. API docs: [http://localhost:8000/docs](http://localhost:8000/docs).
 
@@ -148,6 +148,6 @@ pdf-chatbot/
 - **Document pipeline:** PDF → PyMuPDF text extraction → sentence-aware chunking → embeddings (Sentence Transformers) → ChromaDB.
 - **Chat pipeline:** User question → embed → similarity search in ChromaDB → top-k chunks as context → LLM (OpenAI if key set, else HuggingFace FLAN-T5) → answer + source excerpts.
 - **NLP/AI choices:**  
-  - Embeddings: `all-MiniLM-L6-v2` for fast, good-quality semantic search.  
+  - Embeddings: `text-embedding-3-small` for fast, good-quality semantic search.  
   - Vector store: ChromaDB for persistence and simple API.  
-  - Generator: Configurable (OpenAI or local FLAN-T5) for flexibility and offline use.
+  - Generator: Configurable (OpenAI) for flexibility and offline use.
