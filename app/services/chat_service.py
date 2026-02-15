@@ -1,5 +1,11 @@
 """
-Chat service: combine retrieval (RAG) with an LLM to answer questions.
+Chat service: RAG (retrieve + generate) for answering questions from documents.
+
+Main functionality:
+- _get_context: embed question, search ChromaDB for top-k chunks; optional extra queries
+  from question words/phrases to improve retrieval for policy-style Q&A.
+- _answer_with_openai / _answer_with_hf: generate answer from context (OpenAI or FLAN-T5).
+- answer: orchestrate context retrieval, LLM call, return answer and source excerpts.
 """
 
 from typing import List, Optional
@@ -8,7 +14,7 @@ from app.services.embeddings_service import EmbeddingsService
 
 
 class ChatService:
-    """Generate contextually relevant answers from document knowledge base."""
+    """Generate answers by retrieving relevant chunks (RAG) then calling an LLM."""
 
     def __init__(
         self,

@@ -1,7 +1,11 @@
 """
 PDF Chatbot - Streamlit UI.
-Run the FastAPI backend first (uvicorn app.main:app --port 8000), then:
-  streamlit run streamlit_app.py
+
+Main functionality:
+- Sidebar: file uploader, "Upload & index" (POST /documents/upload), "Clear index" (POST /documents/clear).
+- Main area: chat history (st.session_state.messages), st.chat_input for questions;
+  each question is sent to POST /chat/ask and the answer + sources are appended.
+- API_URL from env (default http://localhost:8000). Backend must be running first, or use python run.py.
 """
 
 import os
@@ -15,13 +19,13 @@ st.set_page_config(page_title="PDF Chatbot", page_icon="📄", layout="centered"
 st.title("PDF Chatbot")
 st.caption("Upload PDFs and ask questions — answers from your documents")
 
-# Session state for chat history
+# Session state for chat history (list of {role, content, sources})
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
 
 def upload_pdf(file):
-    """Upload PDF to backend. Returns (success, message)."""
+    """POST file to /documents/upload. Returns (success, message). Uses BytesIO for httpx multipart."""
     if file is None:
         return False, "No file selected."
     try:
@@ -52,7 +56,7 @@ def upload_pdf(file):
 
 
 def clear_index():
-    """Clear document index. Returns (success, message)."""
+    """POST to /documents/clear. Returns (success, message)."""
     try:
         with httpx.Client(timeout=10.0) as client:
             resp = client.post(f"{API_URL}/documents/clear")
@@ -67,7 +71,7 @@ def clear_index():
 
 
 def ask_chat(question: str):
-    """Send question to chatbot. Returns (answer, sources) or (error_message, None) on error."""
+    """POST to /chat/ask with {question}. Returns (answer, sources) or (error_message, None) on error."""
     try:
         with httpx.Client(timeout=60.0) as client:
             resp = client.post(

@@ -1,5 +1,10 @@
 """
 Document upload API: accept PDF files and index them for the chatbot.
+
+Main functionality:
+- POST /upload: validate PDF, save file, extract text, chunk, embed, store in ChromaDB.
+- GET /status: return number of chunks in the index (for UI/debugging).
+- POST /clear: delete the vector collection so user can re-upload fresh.
 """
 
 from pathlib import Path
@@ -15,6 +20,7 @@ router = APIRouter(prefix="/documents", tags=["Documents"])
 
 
 def get_pdf_service() -> PDFService:
+    """Build PDFService with configured chunk size and overlap."""
     settings = get_settings()
     return PDFService(
         chunk_size=settings.chunk_size,
@@ -25,8 +31,8 @@ def get_pdf_service() -> PDFService:
 @router.post("/upload", response_model=DocumentUploadResponse)
 async def upload_document(file: UploadFile = File(...)):
     """
-    Upload a PDF document. Text is extracted, chunked, and indexed
-    for the chatbot knowledge base.
+    Upload a PDF: validate type/size, save to disk, extract text via PDFService,
+    chunk text, embed via EmbeddingsService, add to ChromaDB. Returns page count and chunks indexed.
     """
     settings = get_settings()
     # Accept PDF by content-type or by extension (browsers may send different MIME types)

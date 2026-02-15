@@ -156,6 +156,8 @@ pdf-chatbot/
 
 ## Presentation (10–15 minutes)
 
+A PowerPoint file **`PDF_Chatbot_Presentation.pptx`** is included (architecture, NLP/AI choices, API, deployment, project structure, demo). To regenerate it: `pip install python-pptx` then `python scripts/build_presentation.py`.
+
 Suggested outline for the live demo and technical walkthrough:
 
 1. **Introduction (1 min)**  
@@ -195,6 +197,7 @@ Suggested outline for the live demo and technical walkthrough:
 - [x] User interface (upload + chat window)  
 - [x] Dockerfile and docker-compose for deployment  
 - [x] README with setup, API documentation, and presentation outline  
+- [x] PowerPoint presentation (`PDF_Chatbot_Presentation.pptx`)  
 
 ---
 
