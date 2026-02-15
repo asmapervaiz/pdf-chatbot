@@ -1,5 +1,8 @@
 """
 API request/response schemas (Pydantic models).
+
+Main functionality: define request/response shapes for /health, /documents/upload,
+/chat/ask (ChatRequest, ChatResponse), and DocumentUploadResponse for validation and OpenAPI.
 """
 
 from typing import List, Optional

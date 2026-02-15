@@ -1,6 +1,12 @@
 """
 Embeddings and vector store for semantic search over document chunks.
-Supports OpenAI text-embedding-3-small (when API key set) or local sentence-transformers.
+
+Main functionality:
+- add_chunks: embed text chunks (OpenAI or sentence-transformers), store in ChromaDB.
+- search: embed query, run similarity search, return top-k chunk texts.
+- count / clear: for status and reset. Uses a single shared instance (get_embeddings_service)
+  so upload and chat use the same collection. Separate collection name for OpenAI (1536-dim)
+  vs local (384-dim) to avoid dimension mismatch.
 """
 
 from pathlib import Path
@@ -16,7 +22,7 @@ OPENAI_EMBED_BATCH_SIZE = 100
 
 
 class EmbeddingsService:
-    """Manage document embeddings and vector store (ChromaDB)."""
+    """Manage document embeddings and ChromaDB vector store (add, search, count, clear)."""
 
     def __init__(
         self,

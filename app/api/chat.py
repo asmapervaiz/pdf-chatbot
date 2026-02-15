@@ -1,5 +1,9 @@
 """
 Chat API: submit questions and receive answers from the document knowledge base.
+
+Main functionality:
+- POST /ask: take a question, retrieve relevant chunks (RAG), generate answer via LLM,
+  return answer and optional source excerpts.
 """
 
 from fastapi import APIRouter
@@ -13,6 +17,7 @@ router = APIRouter(prefix="/chat", tags=["Chat"])
 
 
 def get_chat_service() -> ChatService:
+    """Build ChatService with shared EmbeddingsService and configured LLM settings."""
     settings = get_settings()
     return ChatService(
         embeddings_service=get_embeddings_service(),

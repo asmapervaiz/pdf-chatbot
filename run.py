@@ -2,9 +2,11 @@
 Run PDF Chatbot backend API + Streamlit UI with a single command.
   python run.py
 
-Backend: http://localhost:8000  (API + docs at /docs)
-UI:      http://localhost:8501 (Streamlit)
-
+Main functionality:
+- Set ROOT and sys.path so "app.main" can be imported; pre-check app.main and streamlit.
+- Start uvicorn in a daemon thread (same process, so no import path issues).
+- Start Streamlit in a subprocess; on Ctrl+C or exit, kill Streamlit only (process exits).
+Backend: http://localhost:8000  |  UI: http://localhost:8501
 Run from the project root (directory containing run.py and app/).
 """
 
@@ -26,6 +28,7 @@ BACKEND_PORT = 8000
 
 
 def _run_backend():
+    """Run uvicorn in the current process (daemon thread)."""
     import uvicorn
     uvicorn.run(
         "app.main:app",
@@ -36,6 +39,7 @@ def _run_backend():
 
 
 def kill_streamlit():
+    """Terminate the Streamlit subprocess on exit or Ctrl+C."""
     global _streamlit
     if _streamlit and _streamlit.poll() is None:
         _streamlit.terminate()

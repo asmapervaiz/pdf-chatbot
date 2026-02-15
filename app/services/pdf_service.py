@@ -1,5 +1,11 @@
 """
 PDF text extraction and chunking for the chatbot knowledge base.
+
+Main functionality:
+- extract_text: open PDF with PyMuPDF (fitz), get text per page, return full text and page count.
+- chunk_text: split by paragraph (double newline) then merge into chunks of ~chunk_size with overlap
+  so policy/list content stays together for better RAG retrieval.
+- process_pdf: orchestrate extract + chunk; used by the upload API.
 """
 
 import re
@@ -10,7 +16,7 @@ import fitz  # PyMuPDF
 
 
 class PDFService:
-    """Extract and chunk text from PDF documents."""
+    """Extract and chunk text from PDF documents for embedding and retrieval."""
 
     def __init__(self, chunk_size: int = 500, chunk_overlap: int = 50):
         self.chunk_size = chunk_size
@@ -18,7 +24,7 @@ class PDFService:
 
     def extract_text(self, file_path: Path) -> tuple[str, int]:
         """
-        Extract raw text from a PDF file.
+        Extract raw text from a PDF file using PyMuPDF.
         Returns (full_text, number_of_pages).
         """
         doc = fitz.open(file_path)
