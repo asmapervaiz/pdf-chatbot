@@ -146,7 +146,7 @@ pdf-chatbot/
 ## Design and architecture
 
 - **Document pipeline:** PDF → PyMuPDF text extraction → sentence-aware chunking → embeddings (Sentence Transformers) → ChromaDB.
-- **Chat pipeline:** User question → embed → similarity search in ChromaDB → top-k chunks as context → LLM (OpenAI if key set, else HuggingFace FLAN-T5) → answer + source excerpts.
+- **Chat pipeline:** User question → embed → similarity search in ChromaDB → top-k chunks as context → LLM (OpenAI) → answer + source excerpts.
 - **NLP/AI choices:**  
   - Embeddings: `text-embedding-3-small` for fast, good-quality semantic search.  
   - Vector store: ChromaDB for persistence and simple API.  
